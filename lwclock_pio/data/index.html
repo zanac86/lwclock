@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<title>Led screen ver:3.0</title>
+	<link rel="icon" href="./img/favicon.png" type="images/png">
+	<link rel="stylesheet" type="text/css" href="/style.css">
+	<script type="text/javascript" src="/function.js"></script>
+	<script type="text/javascript" src="/lang_RU.js"></script>
+	<script type="text/javascript">
+
+		async function send_json() {
+			const t = new Date();
+			await fetch("/setconfig",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"Accept": "application/json"
+					},
+					body: JSON.stringify({
+						"clockFrom": val('clockFrom'),
+						"clockTo": val('clockTo'),
+						"dateFrom": val('dateFrom'),
+						"dateTo": val('dateTo'),
+						"ledText0": val('ledText0'),
+						"ledText1": val('ledText1'),
+						"ledText2": val('ledText2'),
+						"ledText3": val('ledText3'),
+						"isTxtOn0": val_sw('isTxtOn0'),
+						"isTxtOn1": val_sw('isTxtOn1'),
+						"isTxtOn2": val_sw('isTxtOn2'),
+						"isTxtOn3": val_sw('isTxtOn3'),
+						"txtFrom0": val('txtFrom0'),
+						"txtFrom1": val('txtFrom1'),
+						"txtFrom2": val('txtFrom2'),
+						"txtFrom3": val('txtFrom3'),
+						"txtTo0": val('txtTo0'),
+						"txtTo1": val('txtTo1'),
+						"txtTo2": val('txtTo2'),
+						"txtTo3": val('txtTo3'),
+						"isCrLine0": val_sw('isCrLine0'),
+						"isCrLine1": val_sw('isCrLine1'),
+						"isCrLine2": val_sw('isCrLine2'),
+						"isCrLine3": val_sw('isCrLine3'),
+						"global_start": val('global_start'),
+						"global_stop": val('global_stop'),
+						"fontUsed": val('fontUsed'),
+						"brightd": val('brightd'),
+						"brightn": val('brightn'),
+						"dmodefrom": val('dmodefrom'),
+						"dmodeto": val('dmodeto'),
+						"speed_d": val('speed_d'),
+						"isLedClock": val_sw('isLedClock'),
+						"isLedDate": val_sw('isLedDate'),
+						"date_day": t.getDate(),
+						"date_month": t.getMonth() + 1,
+						"date_year": t.getFullYear(),
+						"time_h": t.getHours(),
+						"time_m": t.getMinutes(),
+						"time_s": t.getSeconds(),
+					})
+				});
+			window.location.reload();
+		}
+
+	</script>
+
+</head>
+
+<body onload="load();">
+	<central-unit>
+		<div class="menu_unit">
+			<a class="link__img" href="#"><span class="ico__text" onclick="clearConfigEsp();">Clear config</span></a>
+			<a class="link__img" href="#"><span class="ico__text" onclick="restartEsp();">Restart device</span></a>
+		</div>
+		<div id="main_unit">
+			<paragraph><span class="opt_cn" id="P_led_set"></span></paragraph>
+			<center>
+				<table id="table__font">
+					<tr>
+						<td><span class="opt_cn" id="P_led_infOn">On</span></td>
+						<td><span class="opt_cn" id="P_led_infFrom">From</span></td>
+						<td><span class="opt_cn" id="P_led_infTo">To</span></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" id="isLedClock"></td>
+						<td>
+							<select id="clockFrom">
+							</select>
+						</td>
+						<td>
+							<select id="clockTo">
+							</select>
+						</td>
+						<td align="left"><span class="opt_cn" id="P_led_clock"></span></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" id="isLedDate"></td>
+						<td>
+							<select id="dateFrom">
+							</select>
+						</td>
+						<td>
+							<select id="dateTo">
+							</select>
+						</td>
+						<td align="left"><span class="opt_cn" id="P_led_date"></span></td>
+					</tr>
+				</table>
+			</center>
+			<br>
+			<paragraph><span class="opt_cn" id="P_led_texts"></span></paragraph>
+			<center>
+				<table id="table__font">
+					<tr>
+						<td><span class="opt_cn" id="P_led_textOn">On</span></td>
+						<td><span class="opt_cn" id="P_led_textFrom">From</span></td>
+						<td><span class="opt_cn" id="P_led_textTo">To</span></td>
+						<td><span class="opt_cn" id="P_led_textCrL">Creeping line</span></td>
+						<td><span class="opt_cn" id="P_led_text">Text</span></td>
+					</tr>
+					<tr>
+						<td><span><input type="checkbox" id="isTxtOn0"></span></td>
+						<td>
+							<select id="txtFrom0">
+							</select>
+						</td>
+						<td>
+							<select id="txtTo0">
+							</select>
+						</td>
+						<td><span><input type="checkbox" id="isCrLine0"></span></td>
+						<td>
+							<input type="text" class="field" id="ledText0" value="{{ledText0}}" pattern=".{1,255}">
+						</td>
+					</tr>
+					<tr>
+						<td><span><input type="checkbox" id="isTxtOn1"></span></td>
+						<td>
+							<select id="txtFrom1">
+							</select>
+						</td>
+						<td>
+							<select id="txtTo1">
+							</select>
+						</td>
+						<td><span><input type="checkbox" id="isCrLine1"></span></td>
+						<td>
+							<input type="text" class="field" id="ledText1" value="{{ledText1}}" pattern=".{1,255}">
+						</td>
+					</tr>
+					<tr>
+						<td><span><input type="checkbox" id="isTxtOn2"></span></td>
+						<td>
+							<select id="txtFrom2">
+							</select>
+						</td>
+						<td>
+							<select id="txtTo2">
+							</select>
+						</td>
+						<td><span><input type="checkbox" id="isCrLine2"></span></td>
+						<td>
+							<input type="text" class="field" id="ledText2" value="{{ledText2}}" pattern=".{1,255}">
+						</td>
+					</tr>
+					<tr>
+						<td><span><input type="checkbox" id="isTxtOn3"></span></td>
+						<td>
+							<select id="txtFrom3">
+							</select>
+						</td>
+						<td>
+							<select id="txtTo3">
+							</select>
+						</td>
+						<td><span><input type="checkbox" id="isCrLine3"></span></td>
+						<td>
+							<input type="text" class="field" id="ledText3" value="{{ledText3}}" pattern=".{1,255}">
+						</td>
+					</tr>
+				</table>
+			</center>
+			<br>
+			<paragraph><span class="opt_cn" id="P_led_textsOnOff"></span></paragraph>
+			<center>
+				<table id="table__font">
+					<tr>
+						<td><span class="opt_cn" id="P_led_textstart"></span></td>
+						<td>
+							<select id="global_start">
+							</select>
+						</td>
+						<td><span class="opt_cn" id="P_led_textstop"></span></td>
+						<td>
+							<select id="global_stop">
+							</select>
+						</td>
+					</tr>
+				</table>
+			</center>
+			<br>
+			<paragraph><span class="opt_cn" id="P_setup_title"></span></paragraph>
+			<center>
+				<table>
+					<tr>
+						<td align="right"><span class="opt_cn" id="P_setup_speed"></span></td>
+						<td colspan=3><input id="speed_d" type="range" value="{{speed_d}}" min="3" max="25"></td>
+					</tr>
+					<tr>
+						<td align="right"><span class="opt_cn" id="P_setup_dmfrom"></span></td>
+						<td><select id="dmodefrom">
+								<option value="0"> 0 </option>
+								<option value="1"> 1 </option>
+								<option value="2"> 2 </option>
+								<option value="3"> 3 </option>
+								<option value="4"> 4 </option>
+								<option value="5"> 5 </option>
+								<option value="6"> 6 </option>
+								<option value="7"> 7 </option>
+								<option value="8"> 8 </option>
+								<option value="9"> 9 </option>
+								<option value="10"> 10 </option>
+								<option value="11"> 11 </option>
+								<option value="12"> 12 </option>
+								<option value="13"> 13 </option>
+								<option value="14"> 14 </option>
+								<option value="15"> 15 </option>
+								<option value="16"> 16 </option>
+								<option value="17"> 17 </option>
+								<option value="18"> 18 </option>
+								<option value="19"> 19 </option>
+								<option value="20"> 20 </option>
+								<option value="21"> 21 </option>
+								<option value="22"> 22 </option>
+								<option value="23"> 23 </option>
+							</select></td>
+						<td align="right"><span class="opt_cn" id="P_setup_dmto"></span></td>
+						<td><select id="dmodeto">
+								<option value="1"> 1 </option>
+								<option value="2"> 2 </option>
+								<option value="3"> 3 </option>
+								<option value="4"> 4 </option>
+								<option value="5"> 5 </option>
+								<option value="6"> 6 </option>
+								<option value="7"> 7 </option>
+								<option value="8"> 8 </option>
+								<option value="9"> 9 </option>
+								<option value="10"> 10 </option>
+								<option value="11"> 11 </option>
+								<option value="12"> 12 </option>
+								<option value="13"> 13 </option>
+								<option value="14"> 14 </option>
+								<option value="15"> 15 </option>
+								<option value="16"> 16 </option>
+								<option value="17"> 17 </option>
+								<option value="18"> 18 </option>
+								<option value="19"> 19 </option>
+								<option value="20"> 20 </option>
+								<option value="21"> 21 </option>
+								<option value="22"> 22 </option>
+								<option value="23"> 23 </option>
+								<option value="24"> 24 </option>
+							</select></td>
+					</tr>
+					<tr>
+						<td align="right"><span class="opt_cn" id="P_setup_brightday"></span></td>
+						<td><select id="brightd">
+								<option value="0"> 0 </option>
+								<option value="1"> 1 </option>
+								<option value="2"> 2 </option>
+								<option value="3"> 3 </option>
+								<option value="4"> 4 </option>
+								<option value="5"> 5 </option>
+								<option value="6"> 6 </option>
+								<option value="7"> 7 </option>
+								<option value="8"> 8 </option>
+								<option value="9"> 9 </option>
+								<option value="10"> 10 </option>
+								<option value="11"> 11 </option>
+								<option value="12"> 12 </option>
+								<option value="13"> 13 </option>
+								<option value="14"> 14 </option>
+								<option value="15"> 15 </option>
+							</select></td>
+						<td align="right"><span class="opt_cn" id="P_setup_brightnight"></span></td>
+						<td><select id="brightn">
+								<option value="0"> 0 </option>
+								<option value="1"> 1 </option>
+								<option value="2"> 2 </option>
+								<option value="3"> 3 </option>
+								<option value="4"> 4 </option>
+								<option value="5"> 5 </option>
+								<option value="6"> 6 </option>
+								<option value="7"> 7 </option>
+								<option value="8"> 8 </option>
+								<option value="9"> 9 </option>
+								<option value="10"> 10 </option>
+								<option value="11"> 11 </option>
+								<option value="12"> 12 </option>
+								<option value="13"> 13 </option>
+								<option value="14"> 14 </option>
+								<option value="15"> 15 </option>
+							</select></td>
+					</tr>
+					<tr>
+				</table>
+				<br>
+				<span class="opt_cn" id="P_setup_font"></span>
+				<select id="fontUsed">
+					<option value="0">6bit</option>
+					<option value="1">5bit</option>
+					<option value="2">old</option>
+					<option value="3">msx</option>
+				</select>
+			</center>
+			<br>
+			<br>
+			<span class="save_booton" id="save2" onclick="send_json(this);"></span>
+			<br>
+
+		</div>
+	</central-unit>
+</body>
+
+</html>
