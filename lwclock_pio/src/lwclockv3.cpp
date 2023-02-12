@@ -694,13 +694,34 @@ bool saveConfig()
     return true;
 }
 
+String ap_uniq_name()
+{
+    // copy the mac address to a byte array
+    uint8_t mac[WL_MAC_ADDR_LENGTH];
+    WiFi.softAPmacAddress(mac);
+
+    // format the last two digits to hex character array, like 0A0B
+    char macID[15];
+    sprintf(macID, "LWCLOCK-%02X%02X", mac[WL_MAC_ADDR_LENGTH - 2], mac[WL_MAC_ADDR_LENGTH - 1]);
+
+    // convert the character array to a string
+    String macIdString {macID};
+    macIdString.toUpperCase();
+    Serial.print("AP name: ");
+    Serial.println(macIdString);
+    return macIdString;
+}
+
 void Wifi_init()
 {
     WiFi.disconnect();
     delay(100);
     WiFi.mode(WIFI_AP);
     WiFi.softAPConfig(IPAddress(192, 168, 4, 1), IPAddress(192, 168, 4, 10), IPAddress(255, 255, 255, 0));
-    WiFi.softAP("-led-clock-", "31415926", 11);
+
+    WiFi.softAP(ap_uniq_name(), "31415926");
+
+    //WiFi.softAP("-led-clock-", "31415926", 11);
     delay(100);
 }
 
