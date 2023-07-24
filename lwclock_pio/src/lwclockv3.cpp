@@ -145,6 +145,12 @@ float global_stop = 24; //Working time
 
 ESP8266WebServer HTTP;
 
+
+// off wifi after 300 seconds = 5 min
+int seconds_before_disable_wifi = 300;
+bool wifi_disabled = false;
+
+
 //predefine functions
 void WIFI_init();
 bool compTimeInt(float tFrom, float tTo, float tNow);
@@ -433,6 +439,7 @@ void handle_config_json()
     P.displaySuspend(false);
 }
 
+// перезагрузка по команде со страницы
 void handle_Restart()
 {
     Serial.println("Resetting...");
@@ -448,6 +455,7 @@ void handle_Restart()
     }
 }
 
+// удаление конфига и перезагрузка
 void handle_resetConfig()
 {
     String restart = HTTP.arg("device");
@@ -694,6 +702,7 @@ bool saveConfig()
     return true;
 }
 
+// уникальное имя точки доступа по 4 последним символам mac адреса
 String ap_uniq_name()
 {
     // copy the mac address to a byte array
@@ -712,6 +721,7 @@ String ap_uniq_name()
     return macIdString;
 }
 
+// подготовка WiFi
 void Wifi_init()
 {
     WiFi.disconnect();
@@ -721,10 +731,24 @@ void Wifi_init()
 
     WiFi.softAP(ap_uniq_name(), "31415926");
 
-    //WiFi.softAP("-led-clock-", "31415926", 11);
     delay(100);
 }
 
+// выключение WiFi после заданного времени
+void check_wifi_disable()
+{
+    if (!wifi_disabled)
+    {
+        if ((millis()/1000)>seconds_before_disable_wifi)
+        {
+            wifi_disabled=true;
+            WiFi.softAPdisconnect(true);
+            WiFi.mode(WIFI_OFF);
+        }
+    }
+}
+
+// чтение времени из RTC
 void rtc_read_date_time()
 {
     now = RTClib::now();
@@ -843,6 +867,7 @@ void update_show_tasks()
     show_tasks[5].str = strText3;
 }
 
+// установка яркости по времени
 void set_day_night_brightness()
 {
     if (compTimeInt(dmodefrom, dmodeto, nowtime))
@@ -863,11 +888,15 @@ void loop()
 
     EVERY_N_SECONDS(1)
     {
+        // каждую секунду считываем время из RTC
         rtc_read_date_time();
     }
 
     EVERY_N_SECONDS(30)
     {
+        // проверка разрешения работы WIFI
+        check_wifi_disable();
+        // обновления уровня яркости
         set_day_night_brightness(); // check time for two brightness mode
     }
 
